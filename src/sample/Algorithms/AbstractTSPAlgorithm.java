@@ -6,8 +6,8 @@ public abstract class AbstractTSPAlgorithm {
 
     protected static double countRoute(double[][] distanceMatrix, int[] result) {
         double res = 0;
-        for (int i = 0; i < distanceMatrix.length - 1; i++) {
-            res += distanceMatrix[result[i]][result[i + 1]];
+        for (int i = 1; i < result.length; i++) {
+            res += distanceMatrix[result[i-1]][result[i]];
         }
         return res;
     }

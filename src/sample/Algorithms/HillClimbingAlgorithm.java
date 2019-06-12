@@ -6,47 +6,6 @@ import java.util.Random;
 
 public class HillClimbingAlgorithm extends AbstractTSPAlgorithm {
 
-//    public static AlgorithmSolution solveHillClimbing(List<City> lista, XYChart.Series chart){
-//        //Wybierz losową ścieżkę rozwiązania
-//        //sprawdz czy kazde sąsiednie rozwiązanie jest lepsze
-//        //Jesli nie to zwroc wynik
-//        //Jesli tak to wyznacz sciezke jako lepsza i ponow rozwiazanie
-//
-//        //Obranie losowej sciezki i obliczenie jej odleglosci
-//        long startTime = System.nanoTime();
-//        double distance;
-//        //Sciezka losowa
-//        List<City> route = new ArrayList<>(lista);
-//
-//        Collections.shuffle(route);
-//        distance = countRoute(route);
-//        System.out.println("dystans: " + distance);
-//
-//        for(int i=0; i<route.size(); i++){ //dla kazdego elementu w liscie
-//            for (int j=i+1; j<route.size(); j++){ //zamien z kolejnymi elementami i porownaj odleglosc dwoch list
-//                List<City> tmpList = new ArrayList<>(route);
-//                if(j < route.size() -2 ) {
-//                    Collections.swap(tmpList, j, j+1);
-//                }
-//
-//                double tmpDist = countRoute(tmpList);
-////                System.out.println("TMP DIST: " + tmpDist);
-////                System.out.println("Route Dist: " + distance);
-//                if(tmpDist < distance){
-//                    System.out.println(tmpDist);
-////                    System.out.println(i + " #" + " j : " + j);
-//                    route = tmpList;
-//                    distance = tmpDist;
-////                    System.out.println(distance);
-//                    i = 0;
-//                }
-//
-//            }
-//        }
-//        long endTime = System.nanoTime();
-//
-//        return new AlgorithmSolution(distance, (endTime-startTime), route);
-//    }
 
     public static AlgorithmSolution solveHillClimbing(double[][] distanceMatrix, XYChart.Series chart) {
         //Wybierz losową ścieżkę rozwiązania
@@ -57,19 +16,25 @@ public class HillClimbingAlgorithm extends AbstractTSPAlgorithm {
 
         long startTime = System.currentTimeMillis();
 
-        int[] result = temporaryArray(distanceMatrix.length);
+        int[] result = temporaryArray(distanceMatrix.length+1);
 
 
         //Obranie losowej sciezki i obliczenie jej odleglosci
         //tablica result jest tablica wynikowa, ktora przechowuje indexy miast
         int size = 0;
-        while (size < distanceMatrix.length) {
-            int j = randomIndex(distanceMatrix.length);
+        int randIndex = randomIndex(result.length-1);
+        int startIndex = randIndex;
+        while (size < result.length) {
 
-            if (!isIndexInResult(result, j)) {
-                result[size] = j;
+            if (!isIndexInResult(result, randIndex)) {
+                result[size] = randIndex;
                 size++;
             }
+            else if(size==result.length-1){
+                result[size] = startIndex;
+                size++;
+            }
+            randIndex = randomIndex(result.length-1);
         }
         //Liczenie odleglosci podanej sciezki
         double distance = countRoute(distanceMatrix, result);
@@ -81,8 +46,8 @@ public class HillClimbingAlgorithm extends AbstractTSPAlgorithm {
                 int[] tmpRes = result.clone();
                 if (j < result.length - 2) {
                     int tmp = result[i];
-                    result[i] = result[i + 1];
-                    result[i + 1] = tmp;
+                    result[i] = result[j];
+                    result[j] = tmp;
                 }
 
                 //Sprawdzanie odleglosci sciezki sąsiedniej

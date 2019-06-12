@@ -10,8 +10,9 @@ public class GreedyAlgorithm extends AbstractTSPAlgorithm {
 
         long startTime = System.currentTimeMillis();
 
-        int[] result = temporaryArray(distanceMatrix.length);
+        int[] result = temporaryArray(distanceMatrix.length+1);
         int index = randomIndex(distanceMatrix.length);
+        int firstIndex = index;
         int resSize = 0;
         result[resSize] = index;
         resSize++;
@@ -39,6 +40,16 @@ public class GreedyAlgorithm extends AbstractTSPAlgorithm {
             resSize++;
 
         }
+
+        //Dodanie przejscia do punktu startowego
+
+
+        result[resSize] = firstIndex;
+        int len = result.length;
+        distance+=distanceMatrix[result[len-2]][result[len-1]];
+        chart.getData().add(new XYChart.Data(resSize, distance));
+
+
         distance = countRoute(distanceMatrix, result);
         long endTime = System.currentTimeMillis();
         return new AlgorithmSolution(distance, (endTime - startTime), result, chart);
